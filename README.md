@@ -12,7 +12,7 @@ See `example.py` for usage.
 
 * `bg_subs_scale_percent` &ndash; how much to scale initial frame before movement detection occurs (default: **1/4**);
 * `bg_history` &ndash; the length of background accumulator ring buffer (default: **15**);
-* `bg_history_collection_period_max` &ndash; defines how often update background ring buffer with frames from movement (default **1** &ndash; every frame);
+* `bg_history_collection_period_max` &ndash; defines how often update background ring buffer with frames from movement (default: **1** &ndash; every frame);
 * `movement_frames_history` &ndash; how much frames to keep in movement accumulator ring buffer (default: **5**);
 * `brightness_discard_level` &ndash; threshold which is used to detect movement from the noise (default: **20**);
 * `pixel_compression_ratio` &ndash; how much to compress the initial video for boxes search (default: **20**), means that every **20x20** px of initial frame will be resized to **1x1** of detection frame;
