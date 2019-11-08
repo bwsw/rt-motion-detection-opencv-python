@@ -1,0 +1,3 @@
+numba
+cv2
+numpy
