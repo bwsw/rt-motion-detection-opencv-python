@@ -53,3 +53,8 @@ if __name__ == "__main__":
             break
 ```
 
+## Author
+
+The code is created by Ivan Kudriavtsev from [Bitworks Software](https://bitworks.software/) &ndash; custom software development company with focus on scalable, BigData & ML solutions for customers worldwide.
+
+![Bitworks Software](https://github.com/bwsw/cloudstack-ui/blob/master/screens/15047882.png)
