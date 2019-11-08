@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
 ## Author
 
-The code is developed by [Ivan Kudriavtsev](https://www.facebook.com/ivan.kudryavtsev.35) from [Bitworks Software](https://bitworks.software/) &ndash; custom software development company focused on delivery of scalable, BigData & ML solutions for customers worldwide.
+The code is developed by [Ivan Kudriavtsev](https://www.facebook.com/ivan.kudryavtsev.35) @ [Bitworks Software](https://bitworks.software/) &ndash; custom software development company focused on delivery of scalable, BigData & ML solutions for customers worldwide.
 
 Find me on FB: https://www.facebook.com/ivan.kudryavtsev.35
 
