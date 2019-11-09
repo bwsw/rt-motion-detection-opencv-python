@@ -19,9 +19,9 @@ if __name__ == "__main__":
         # Capture frame-by-frame
         ret, frame = cap.read()
         begin = time()
-        detector.detect(frame)
+        boxes = detector.detect(frame)
         end = time()
-        print(detector.count, 1000 * (end - begin), len(detector.bg_frames), len(detector.boxes))
+        print(detector.count, 1000 * (end - begin), len(detector.bg_frames), len(boxes))
         cv2.imshow('last_frame', detector.last_frame)
         cv2.imshow('detect_frame', detector.detection)
         cv2.imshow('diff_frame', detector.color_movement)
