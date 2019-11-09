@@ -18,8 +18,9 @@ def gen_movement_frame(frames, shape):
     acc = acc / ((1 + i) / 2 * i)
     return acc
 
+
 @jit(nopython=True)
-def intersection(a, b):
+def numba_intersection(a, b):
     start_x = max(min(a[0], a[2]), min(b[0], b[2]))
     start_y = max(min(a[1], a[3]), min(b[1], b[3]))
     end_x = min(max(a[0], a[2]), max(b[0], b[2]))
@@ -32,7 +33,7 @@ def intersection(a, b):
 
 
 @jit(nopython=True)
-def combine_rectangles(a, b):  # create bounding box for rect A & B
+def numba_combine_rectangles(a, b):  # create bounding box for rect A & B
     start_x = min(a[0], b[0])
     start_y = min(a[1], b[1])
     end_x = max(a[2], b[2])
@@ -49,8 +50,8 @@ def find_bounding_boxes(rectangles):
         rectangles = list(set(rectangles))
         new_rectangles = []
         for a, b in itertools.combinations(rectangles, 2):
-            if intersection(a, b):
-                new_rect = combine_rectangles(a, b)
+            if numba_intersection(a, b):
+                new_rect = numba_combine_rectangles(a, b)
                 new_rectangles.append(new_rect)
                 intersected = True
                 if a in rectangles:
@@ -155,7 +156,7 @@ class MovementDetector:
                  brightness_discard_level=20,  # if the pixel brightness is lower than
                  # this threshold, it's background
                  pixel_compression_ratio=20,
-                 group_boxes = True,
+                 group_boxes=True,
                  expansion_step=1):
         self.bg_subs_scale_percent = bg_subs_scale_percent
         self.bg_history = bg_history
@@ -180,9 +181,7 @@ class MovementDetector:
 
     @classmethod
     def scale_and_blur(cls, f, width, height):
-        f = cv2.resize(f, (width, height), interpolation=cv2.INTER_CUBIC)
-        f = cv2.GaussianBlur(f, (5, 5), 0)
-        return f
+        return cv2.GaussianBlur(cv2.resize(f, (width, height), interpolation=cv2.INTER_CUBIC), (5, 5), 0)
 
     def __update_background(self, frame_fp32):
         if self.movement_frames.maxlen == len(self.movement_frames):
@@ -252,4 +251,3 @@ class MovementDetector:
 
         self.boxes = boxes
         return boxes
-

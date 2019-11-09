@@ -2,13 +2,11 @@
 
 You can download the video clip which is used in the demo at: https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl
 
-Work example at: https://youtu.be/FCme11alEmc
+Place it in the `tmp` directory.
 
-## Detector usage
+Algorithm demonstration video screencast can be found at: https://youtu.be/FCme11alEmc
 
-See `example.py` for usage.
-
-## Detector parameters
+## Detector usage and parameters
 
 * `bg_subs_scale_percent` &ndash; how much to scale initial frame before movement detection occurs (default: **1/4**);
 * `bg_history` &ndash; the length of background accumulator ring buffer (default: **15**);
@@ -19,8 +17,6 @@ See `example.py` for usage.
 * `group_boxes` &ndash; group overlapping boxes into a single one or just keep them as they are (default: **True**);
 * `expansion_step` &ndash; how big is expansion algoritm step when it searches for boxes, lower steps lead to smaller performance and close objects are detected as separate, bigger step leads to faster algorithm performance and close objects can be detected as a single one (default: **1**).
 
-## Sample usage
-
 ```python
 import cv2
 from time import time
@@ -28,7 +24,7 @@ from detector import MovementDetector
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture('helmets-v1-55.mp4')
+    cap = cv2.VideoCapture('tmp/helmets-v1-55.mp4')
 
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
