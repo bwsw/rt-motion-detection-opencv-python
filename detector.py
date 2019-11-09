@@ -177,10 +177,10 @@ class MovementDetector:
         self.color_movement = None
         self.gs_movement = None
         self.detection = None
-        self.last_frame = None
+        self.frame = None
 
     @classmethod
-    def scale_and_blur(cls, f, width, height):
+    def prepare(cls, f, width, height):
         return cv2.GaussianBlur(cv2.resize(f, (width, height), interpolation=cv2.INTER_CUBIC), (5, 5), 0)
 
     def __update_background(self, frame_fp32):
@@ -223,9 +223,9 @@ class MovementDetector:
         detect_width = int(f.shape[1] / self.pixel_compression_ratio)
         detect_height = int(f.shape[0] / self.pixel_compression_ratio)
 
-        self.last_frame = self.__class__.scale_and_blur(f, width, height)
+        self.frame = self.__class__.prepare(f, width, height)
 
-        nf_fp32 = self.last_frame.astype('float32')
+        nf_fp32 = self.frame.astype('float32')
 
         self.__update_background(nf_fp32)
         self.movement = self.__detect_movement(nf_fp32)
