@@ -57,11 +57,12 @@ The performance depends **a lot** on the next factors:
 * Size of the frame which is used to search for bounding boxes [`pixel_compression_ratio`] (default 1/10), which leads to 148x92 for initial 1480x920 frame.
 * Expansion step [`expansion_step`] which is used to find bounding boxes.
 
-So, for the sample video [https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl] (1480x920@30FPS) and all these parameters set to default the expected performance results for a single frame processing are:
+So, for the sample [video](https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl) (1480x920@30FPS) and all these parameters set to default the expected performance results for a single frame processing are:
 
-* Mean: 8.3690 ms
-* StdDev: 9.3835 ms
+* Mean: 8.3690 ms / frame
+* StdDev: 9.3835 ms / frame
 
+on `Intel(R) Core(TM) i5-7440HQ CPU @ 2.80GHz` CPU.
 
 ## Author
 
