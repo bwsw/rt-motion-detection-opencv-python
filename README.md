@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
 ## Performance
 
-The performance depends **greatly** from the value of following detector parameters:
+The performance depends **greatly** from the values of following detector parameters:
 
 * Background substraction scale [`bg_subs_scale_percent`] (default 1/4), which leads to 480x230 frame for initial 1480x920 frame.
 * Size of the frame which is used to search for bounding boxes [`pixel_compression_ratio`] (default 1/10), which leads to 148x92 for initial 1480x920 frame.
