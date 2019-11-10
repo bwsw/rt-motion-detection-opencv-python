@@ -21,7 +21,7 @@ Algorithm demonstration video screencast can be found at: https://youtu.be/FCme1
 import cv2
 import numpy as np
 from time import time
-from detector import MovementDetector
+from detector import MotionDetector
 
 if __name__ == "__main__":
 
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MovementDetector(bg_history=20)
+    detector = MotionDetector(bg_history=20)
+    # , expansion_step=5
 
     res = []
     while True:
@@ -48,7 +49,6 @@ if __name__ == "__main__":
         cv2.imshow('diff_frame', detector.color_movement)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
 ```
 
 ## Performance

@@ -1,16 +1,17 @@
 import cv2
 import numpy as np
 from time import time
-from detector import MovementDetector
+from detector import MotionDetector
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture('tmp/P_SampleVideo4.avi')
+    cap = cv2.VideoCapture('tmp/helmets-v1-55.mp4')
 
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MovementDetector(bg_history=20, expansion_step=5)
+    detector = MotionDetector(bg_history=20)
+    # , expansion_step=5
 
     res = []
     while True:

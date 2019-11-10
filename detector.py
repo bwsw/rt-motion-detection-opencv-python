@@ -146,7 +146,7 @@ class Scanner:
         return numba_inaccessible_point(r, c, self.height, self.width, self.avoid_points)
 
 
-class MovementDetector:
+class MotionDetector:
     def __init__(self,
                  bg_subs_scale_percent=0.25,
                  bg_history=15,
