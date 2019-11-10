@@ -89,6 +89,36 @@ def numba_get_neighbors(expansion_step: int, r: int, c: int, last_r: int, last_c
     return nl
 
 
+@jit(nopython=True)
+def numba_scan_box(expansion_step: int, height: int, width: int, avoid_points: np.ndarray, r: int, c: int):
+    c_min = MAX_DIMENSION
+    r_min = MAX_DIMENSION
+    c_max = 0
+    r_max = 0
+    nl = [(r, c, -1, -1)]
+    while len(nl) > 0:
+        (r, c, last_r, last_c) = nl.pop()
+
+        if c_min > c:
+            c_min = c
+
+        if r_min > r:
+            r_min = r
+
+        if c_max < c:
+            c_max = c
+
+        if r_max < r:
+            r_max = r
+
+        nl = nl + numba_get_neighbors(expansion_step, r, c, last_r, last_c,
+                                      height, width, avoid_points)
+
+    return [i if i >= 0 else 0 for i in
+              [int(c_min - expansion_step), int(r_min - expansion_step),
+               int(c_max + expansion_step), int(r_max + expansion_step)]]
+
+
 class Scanner:
     def __init__(self, image, expansion_step=1):
         self.avoid_points = np.ones(image.shape, dtype=image.dtype)
@@ -108,42 +138,12 @@ class Scanner:
         while len(self.scan_points):
             (r, c) = self.scan_points.pop()
             if not self.__inaccessible_point(r, c):
-                self.__update_boxes(self.__scan_box(r, c))
+                box = numba_scan_box(self.expansion_step, self.height, self.width, self.avoid_points, r, c)
+                self.__update_boxes((*box,))
         return self.boxes
 
     def __inaccessible_point(self, r, c):
         return numba_inaccessible_point(r, c, self.height, self.width, self.avoid_points)
-
-    def __scan_box(self, r, c):
-        c_min = MAX_DIMENSION
-        r_min = MAX_DIMENSION
-        c_max = 0
-        r_max = 0
-        nl = [(r, c, -1, -1)]
-        while len(nl) > 0:
-            (r, c, last_r, last_c) = nl.pop()
-
-            if c_min > c:
-                c_min = c
-
-            if r_min > r:
-                r_min = r
-
-            if c_max < c:
-                c_max = c
-
-            if r_max < r:
-                r_max = r
-
-            nl = self.__get_neighbours(r, c, last_r, last_c, nl)
-
-        return (*[i if i >= 0 else 0 for i in
-                  [int(c_min - self.expansion_step), int(r_min - self.expansion_step),
-                   int(c_max + self.expansion_step), int(r_max + self.expansion_step)]],)
-
-    def __get_neighbours(self, r, c, last_r, last_c, nl):
-        return nl + numba_get_neighbors(self.expansion_step, r, c, last_r, last_c, self.height, self.width,
-                                        self.avoid_points)
 
 
 class MovementDetector:

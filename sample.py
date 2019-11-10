@@ -9,7 +9,7 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    pixel_compression_ratio = 5
+    pixel_compression_ratio = 10
 
     detector = MovementDetector(pixel_compression_ratio=pixel_compression_ratio,
                                 bg_history=20,
