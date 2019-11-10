@@ -155,7 +155,7 @@ class MovementDetector:
                  # current movement (to decrease the noise)
                  brightness_discard_level=20,  # if the pixel brightness is lower than
                  # this threshold, it's background
-                 pixel_compression_ratio=20,
+                 pixel_compression_ratio=0.1,
                  group_boxes=True,
                  expansion_step=1):
         self.bg_subs_scale_percent = bg_subs_scale_percent
@@ -220,8 +220,8 @@ class MovementDetector:
         width = int(f.shape[1] * self.bg_subs_scale_percent)
         height = int(f.shape[0] * self.bg_subs_scale_percent)
 
-        detect_width = int(f.shape[1] / self.pixel_compression_ratio)
-        detect_height = int(f.shape[0] / self.pixel_compression_ratio)
+        detect_width = int(f.shape[1] * self.pixel_compression_ratio)
+        detect_height = int(f.shape[0] * self.pixel_compression_ratio)
 
         self.frame = self.__class__.prepare(f, width, height)
 
