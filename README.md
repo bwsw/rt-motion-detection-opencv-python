@@ -59,8 +59,8 @@ The performance depends **a lot** on the next factors:
 
 So, for the sample [video](https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl) (1480x920@30FPS) and all these parameters set to default the expected performance results for a single frame processing are:
 
-* Mean: 8.3690 ms / frame
-* StdDev: 9.3835 ms / frame
+* Mean processing time: 8.3690 ms
+* Standard deviation: 9.3835 ms
 
 on `Intel(R) Core(TM) i5-7440HQ CPU @ 2.80GHz` CPU.
 
