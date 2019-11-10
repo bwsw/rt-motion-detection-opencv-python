@@ -10,8 +10,7 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MovementDetector(bg_history=20,
-                                expansion_step=5)
+    detector = MovementDetector(bg_history=20)
 
     res = []
     while True:

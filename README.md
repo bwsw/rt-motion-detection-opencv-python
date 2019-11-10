@@ -30,8 +30,7 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MovementDetector(bg_history=20,
-                                expansion_step=5)
+    detector = MovementDetector(bg_history=20)
 
     res = []
     while True:
@@ -62,8 +61,8 @@ The performance depends **a lot** on the next factors:
 
 So, for the sample [video](https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl) (1480x920@30FPS) and all these parameters set to default the expected performance results for a single frame processing are:
 
-* Mean frame processing time is `8.3690 ms`
-* Standard deviation is `9.3835 ms`
+* Mean frame processing time is `8.7262 ms`
+* Standard deviation is `8.9909 ms`
 
 on `Intel(R) Core(TM) i5-7440HQ CPU @ 2.80GHz` CPU.
 
