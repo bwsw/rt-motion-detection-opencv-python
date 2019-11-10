@@ -37,6 +37,8 @@ if __name__ == "__main__":
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
+        if frame is None:
+            break
         begin = time()
         boxes = detector.detect(frame)
         end = time()
@@ -47,6 +49,7 @@ if __name__ == "__main__":
         cv2.imshow('diff_frame', detector.color_movement)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
 ```
 
 ## Performance

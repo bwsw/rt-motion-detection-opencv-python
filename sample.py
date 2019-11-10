@@ -17,6 +17,8 @@ if __name__ == "__main__":
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
+        if frame is None:
+            break
         begin = time()
         boxes = detector.detect(frame)
         end = time()
