@@ -24,6 +24,11 @@ if __name__ == "__main__":
         end = time()
         res.append(1000 * (end - begin))
         print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Boxes found: ", len(boxes))
+
+        for b in boxes:
+            cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (250, 255, 255), 1)
+
+        cv2.imshow('orig_frame', frame)
         cv2.imshow('last_frame', detector.frame)
         cv2.imshow('detect_frame', detector.detection)
         cv2.imshow('diff_frame', detector.color_movement)

@@ -90,6 +90,11 @@ def numba_get_neighbors(expansion_step: int, r: int, c: int, last_r: int, last_c
 
 
 @jit(nopython=True)
+def numba_scale_box(b: (int, int, int, int), scale: float):
+    return int(b[0] / scale), int(b[1] / scale), int(b[2] / scale), int(b[3] / scale)
+
+
+@jit(nopython=True)
 def numba_scan_box(expansion_step: int, height: int, width: int, avoid_points: np.ndarray, r: int, c: int):
     c_min = MAX_DIMENSION
     r_min = MAX_DIMENSION
@@ -246,8 +251,12 @@ class MotionDetector:
             if self.group_boxes:
                 boxes = find_bounding_boxes(boxes)
 
-        for r in boxes:
-            cv2.rectangle(self.detection, (r[0], r[1]), (r[2], r[3]), 250, 1)
+        for b in boxes:
+            cv2.rectangle(self.detection, (b[0], b[1]), (b[2], b[3]), 250, 1)
 
-        self.boxes = boxes
-        return boxes
+        orig_boxes = []
+        for b in boxes:
+            orig_boxes.append(numba_scale_box(b, self.pixel_compression_ratio))
+
+        self.boxes = orig_boxes
+        return orig_boxes
