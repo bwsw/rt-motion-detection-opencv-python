@@ -12,8 +12,13 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MotionDetector(bg_history=20, bg_subs_scale_percent=0.25, group_boxes=False)
-    # , expansion_step=5
+    detector = MotionDetector(bg_history=15,
+                              bg_subs_scale_percent=0.25,
+                              group_boxes=False,
+                              expansion_step=5,
+                              brightness_discard_level=25)
+
+    # group_boxes=True can be used if one wants to get less boxes, which include all overlapping boxes
 
     b_height = 512
     b_width = 512
@@ -26,11 +31,18 @@ if __name__ == "__main__":
             break
         begin = time()
         boxes = detector.detect(frame)
+        # boxes hold all boxes around motion parts
+
+        ## this code cuts motion areas from initial image and
+        ## fills "bins" of 512x512 with such motion areas.
+        ##
         results = []
         if boxes:
             results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height,
                                            box_filter=lambda b: ((b[2] - b[0]) * (b[3] - b[1])) > 1000)
-            # print(box_map)
+            # box_map holds list of mapping between image placement in packed bins and original boxes
+
+        ## end
 
         for b in boxes:
             cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)

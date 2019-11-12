@@ -115,9 +115,27 @@ def numba_scan_box(expansion_step: int, height: int, width: int, avoid_points: n
         nl = nl + numba_get_neighbors(expansion_step, r, c, last_r, last_c,
                                       height, width, avoid_points)
 
-    return [i if i >= 0 else 0 for i in
-              [int(c_min - expansion_step), int(r_min - expansion_step),
-               int(c_max + expansion_step), int(r_max + expansion_step)]]
+    if c_min - expansion_step < 0:
+        c_min = 0
+    else:
+        c_min = int(c_min - expansion_step)
+
+    if r_min - expansion_step < 0:
+        r_min = 0
+    else:
+        r_min = int(r_min - expansion_step)
+
+    if c_max + expansion_step >= width:
+        c_max = width - 1
+    else:
+        c_max = int(c_max + expansion_step)
+
+    if r_max + expansion_step >= height:
+        r_max = height - 1
+    else:
+        r_max = int(r_max + expansion_step)
+
+    return [c_min, r_min, c_max, r_max]
 
 
 class Scanner:
