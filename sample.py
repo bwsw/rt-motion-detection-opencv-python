@@ -42,7 +42,7 @@ if __name__ == "__main__":
             idx += 1
             cv2.imshow('packed_frame_%d' % idx, r)
 
-        # cv2.imshow('last_frame', detector.frame)
+        cv2.imshow('last_frame', frame)
         # cv2.imshow('detect_frame', detector.detection)
         # cv2.imshow('diff_frame', detector.color_movement)
 
