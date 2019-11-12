@@ -4,6 +4,13 @@ import numpy as np
 from time import time
 from detector import MotionDetector
 from packer import pack_images
+from numba import jit
+
+
+@jit(nopython=True)
+def filter_fun(b):
+    return ((b[2] - b[0]) * (b[3] - b[1])) > 1000
+
 
 if __name__ == "__main__":
 
@@ -15,7 +22,7 @@ if __name__ == "__main__":
     detector = MotionDetector(bg_history=15,
                               bg_subs_scale_percent=0.25,
                               group_boxes=False,
-                              expansion_step=5)
+                              expansion_step=3)
 
     # group_boxes=True can be used if one wants to get less boxes, which include all overlapping boxes
 
@@ -38,7 +45,7 @@ if __name__ == "__main__":
         results = []
         if boxes:
             results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height,
-                                           box_filter=lambda b: ((b[2] - b[0]) * (b[3] - b[1])) > 1000)
+                                           box_filter=filter_fun)
             # box_map holds list of mapping between image placement in packed bins and original boxes
 
         ## end

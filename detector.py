@@ -41,7 +41,7 @@ def numba_combine_rectangles(a, b):  # create bounding box for rect A & B
     return start_x, start_y, end_x, end_y
 
 
-jit(nopython=True, parallel=True)
+@jit(nopython=True, parallel=True)
 def numba_combinations(rectangles):
     res = []
     for a in rectangles:
@@ -51,7 +51,6 @@ def numba_combinations(rectangles):
     return res
 
 
-jit(nopython=True)
 def find_bounding_boxes(rectangles):
     if rectangles is None or not len(rectangles):
         return []
@@ -64,8 +63,7 @@ def find_bounding_boxes(rectangles):
             if numba_intersection(a, b):
                 new_rectangles.add(numba_combine_rectangles(a, b))
                 intersected = True
-                remove_rectangles.add(a)
-                remove_rectangles.add(b)
+                remove_rectangles.add(a, b)
 
         if len(new_rectangles) == 0:
             intersected = False
