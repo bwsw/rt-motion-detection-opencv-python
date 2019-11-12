@@ -15,8 +15,7 @@ if __name__ == "__main__":
     detector = MotionDetector(bg_history=15,
                               bg_subs_scale_percent=0.25,
                               group_boxes=False,
-                              expansion_step=5,
-                              brightness_discard_level=25)
+                              expansion_step=5)
 
     # group_boxes=True can be used if one wants to get less boxes, which include all overlapping boxes
 

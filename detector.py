@@ -41,25 +41,36 @@ def numba_combine_rectangles(a, b):  # create bounding box for rect A & B
     return start_x, start_y, end_x, end_y
 
 
+jit(nopython=True, parallel=True)
+def numba_combinations(rectangles):
+    res = []
+    for a in rectangles:
+        for b in rectangles:
+            if a != b:
+                res.append((a, b))
+    return res
+
+
+jit(nopython=True)
 def find_bounding_boxes(rectangles):
     if rectangles is None or not len(rectangles):
         return []
 
     intersected = True
-    rectangles = set(rectangles)
     while intersected and len(rectangles) > 1:
-        new_rectangles = []
-        remove_set = []
-        for a, b in itertools.combinations(rectangles, 2):
+        new_rectangles = set()
+        remove_rectangles = set()
+        for a, b in numba_combinations(rectangles):
             if numba_intersection(a, b):
-                new_rectangles.append(numba_combine_rectangles(a, b))
+                new_rectangles.add(numba_combine_rectangles(a, b))
                 intersected = True
-                remove_set += [a, b]
+                remove_rectangles.add(a)
+                remove_rectangles.add(b)
 
         if len(new_rectangles) == 0:
             intersected = False
         else:
-            rectangles = rectangles.difference(remove_set).union(new_rectangles)
+            rectangles = rectangles.difference(remove_rectangles).union(new_rectangles)
 
     return rectangles
 
@@ -260,7 +271,7 @@ class MotionDetector:
         if len(self.bg_frames) >= self.bg_history / 2:
             boxes = Scanner(f, self.expansion_step).scan()
             if self.group_boxes:
-                boxes = find_bounding_boxes(boxes)
+                boxes = find_bounding_boxes(set(boxes))
 
         for b in boxes:
             cv2.rectangle(self.detection, (b[0], b[1]), (b[2], b[3]), 250, 1)
