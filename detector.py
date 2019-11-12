@@ -60,7 +60,7 @@ def find_bounding_boxes(rectangles):
         if len(new_rectangles) == 0:
             intersected = False
         else:
-            rectangles = rectangles.union(new_rectangles).difference(remove_set)
+            rectangles = rectangles.difference(remove_set).union(new_rectangles)
 
     return rectangles
 
