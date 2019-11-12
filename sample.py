@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MotionDetector(bg_history=20, bg_subs_scale_percent=0.25)
+    detector = MotionDetector(bg_history=20, bg_subs_scale_percent=0.25, group_boxes=False)
     # , expansion_step=5
 
     b_height = 512
@@ -28,7 +28,8 @@ if __name__ == "__main__":
         boxes = detector.detect(frame)
         results = []
         if boxes:
-            results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height)
+            results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height,
+                                           box_filter=lambda b: ((b[2] - b[0]) * (b[3] - b[1])) > 1000)
             # print(box_map)
 
         for b in boxes:

@@ -52,8 +52,7 @@ def find_bounding_boxes(rectangles):
         remove_set = []
         for a, b in itertools.combinations(rectangles, 2):
             if numba_intersection(a, b):
-                new_rect = numba_combine_rectangles(a, b)
-                new_rectangles.append(new_rect)
+                new_rectangles.append(numba_combine_rectangles(a, b))
                 intersected = True
                 remove_set += [a, b]
 

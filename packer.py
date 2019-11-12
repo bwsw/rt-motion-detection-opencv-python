@@ -3,14 +3,16 @@ from rectpack import newPacker
 from numba import jit
 
 
-def pack_images(frame, boxes, width, height):
+def pack_images(frame, boxes, width, height, box_filter=lambda x: True):
     packer = newPacker(rotation=False)
 
     for b in boxes:
-        packer.add_rect(height=b[2] - b[0], width=b[3] - b[1], rid=b)
+        if box_filter(b):
+            packer.add_rect(height=b[2] - b[0], width=b[3] - b[1], rid=b)
 
     for i in range(0, int((frame.shape[0] + height) / height + 1) * int((frame.shape[1] + width) / width + 1)):
         packer.add_bin(height=width, width=height)
+
     packer.pack()
     rectangles = packer.rect_list()
     return copy_images(frame, rectangles, height, width)
