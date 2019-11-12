@@ -3,7 +3,7 @@ import numpy as np
 
 from time import time
 from detector import MotionDetector
-from packer import DetectionsPacker
+from packer import pack_images
 
 if __name__ == "__main__":
 
@@ -29,8 +29,10 @@ if __name__ == "__main__":
         for b in boxes:
             cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (250, 255, 255), 1)
 
-        p = DetectionsPacker(width=b_width, height=b_height)
-        results = p.pack(frame, boxes)
+        results = []
+        if boxes:
+            results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height)
+            # print(box_map)
         end = time()
         res.append(1000 * (end - begin))
         print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Boxes found: ", len(boxes))
