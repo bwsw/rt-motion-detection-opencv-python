@@ -26,13 +26,14 @@ if __name__ == "__main__":
             break
         begin = time()
         boxes = detector.detect(frame)
-        for b in boxes:
-            cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)
-
         results = []
         if boxes:
             results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height)
             # print(box_map)
+
+        for b in boxes:
+            cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)
+
         end = time()
         res.append(1000 * (end - begin))
         print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Boxes found: ", len(boxes))

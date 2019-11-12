@@ -46,13 +46,14 @@ if __name__ == "__main__":
             break
         begin = time()
         boxes = detector.detect(frame)
-        for b in boxes:
-            cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)
-
         results = []
         if boxes:
             results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height)
             # print(box_map)
+
+        for b in boxes:
+            cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)
+
         end = time()
         res.append(1000 * (end - begin))
         print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Boxes found: ", len(boxes))
@@ -62,12 +63,13 @@ if __name__ == "__main__":
             idx += 1
             cv2.imshow('packed_frame_%d' % idx, r)
 
-        # cv2.imshow('last_frame', detector.frame)
+        cv2.imshow('last_frame', frame)
         # cv2.imshow('detect_frame', detector.detection)
         # cv2.imshow('diff_frame', detector.color_movement)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
 ```
 
 ## Performance

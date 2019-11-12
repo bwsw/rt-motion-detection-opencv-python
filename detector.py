@@ -46,24 +46,21 @@ def find_bounding_boxes(rectangles):
         return []
 
     intersected = True
+    rectangles = set(rectangles)
     while intersected and len(rectangles) > 1:
-        rectangles = list(set(rectangles))
         new_rectangles = []
+        remove_set = []
         for a, b in itertools.combinations(rectangles, 2):
             if numba_intersection(a, b):
                 new_rect = numba_combine_rectangles(a, b)
                 new_rectangles.append(new_rect)
                 intersected = True
-                if a in rectangles:
-                    rectangles.remove(a)
-
-                if b in rectangles:
-                    rectangles.remove(b)
+                remove_set += [a, b]
 
         if len(new_rectangles) == 0:
             intersected = False
         else:
-            rectangles = rectangles + new_rectangles
+            rectangles = rectangles.union(new_rectangles).difference(remove_set)
 
     return rectangles
 
@@ -227,14 +224,11 @@ class MotionDetector:
 
         detect_width = int(f.shape[1] * self.pixel_compression_ratio)
         detect_height = int(f.shape[0] * self.pixel_compression_ratio)
-
         self.frame = self.__class__.prepare(f, width, height)
-
         nf_fp32 = self.frame.astype('float32')
-
         self.__update_background(nf_fp32)
-        self.movement = self.__detect_movement(nf_fp32)
 
+        self.movement = self.__detect_movement(nf_fp32)
         self.detection = cv2.resize(self.movement, (detect_width, detect_height), interpolation=cv2.INTER_CUBIC)
         boxes = self.__get_movement_zones(self.detection)
 
