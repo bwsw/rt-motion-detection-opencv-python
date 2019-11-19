@@ -4,12 +4,11 @@ import numpy as np
 from numba import jit
 from collections import deque
 
-import itertools
 
 MAX_DIMENSION = 100000000
 
 
-def gen_movement_frame(frames, shape):
+def gen_movement_frame(frames: list, shape):
     acc = np.zeros(shape, dtype='float32')
     i = 0
     for f in frames:
@@ -51,6 +50,7 @@ def numba_combinations(rectangles):
     return res
 
 
+@jit(nopython=True)
 def find_bounding_boxes(rectangles):
     if rectangles is None or not len(rectangles):
         return []
@@ -63,7 +63,8 @@ def find_bounding_boxes(rectangles):
             if numba_intersection(a, b):
                 new_rectangles.add(numba_combine_rectangles(a, b))
                 intersected = True
-                remove_rectangles.add(a, b)
+                remove_rectangles.add(a)
+                remove_rectangles.add(b)
 
         if len(new_rectangles) == 0:
             intersected = False
@@ -234,7 +235,7 @@ class MotionDetector:
 
     def __detect_movement(self, frame_fp32):
         self.movement_frames.append(frame_fp32)
-        movement_frame = gen_movement_frame(self.movement_frames, frame_fp32.shape)
+        movement_frame = gen_movement_frame(list(self.movement_frames), frame_fp32.shape)
         movement = cv2.absdiff(movement_frame, self.background_frame / len(self.bg_frames))
         self.color_movement = movement
         movement[movement < self.brightness_discard_level] = 0

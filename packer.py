@@ -1,6 +1,5 @@
 import numpy as np
 from rectpack import newPacker
-from numba import jit
 
 
 def pack_images(frame, boxes, width, height, box_filter=lambda x: True):

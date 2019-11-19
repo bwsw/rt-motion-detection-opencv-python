@@ -19,10 +19,9 @@ if __name__ == "__main__":
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MotionDetector(bg_history=15,
-                              bg_subs_scale_percent=0.25,
+    detector = MotionDetector(bg_history=20,
                               group_boxes=False,
-                              expansion_step=3)
+                              expansion_step=5)
 
     # group_boxes=True can be used if one wants to get less boxes, which include all overlapping boxes
 
@@ -63,7 +62,7 @@ if __name__ == "__main__":
             cv2.imshow('packed_frame_%d' % idx, r)
 
         cv2.imshow('last_frame', frame)
-        # cv2.imshow('detect_frame', detector.detection)
+        cv2.imshow('detect_frame', detector.detection)
         # cv2.imshow('diff_frame', detector.color_movement)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
