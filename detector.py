@@ -182,6 +182,7 @@ class MotionDetector:
         self.color_movement = None
         self.gs_movement = None
         self.detection = None
+        self.detection_boxed = None
         self.frame = None
 
     @classmethod
@@ -248,8 +249,9 @@ class MotionDetector:
             if self.group_boxes:
                 boxes = find_bounding_boxes(set(boxes))
 
+        self.detection_boxed = self.detection.copy()
         for b in boxes:
-            cv2.rectangle(self.detection, (b[0], b[1]), (b[2], b[3]), 250, 1)
+            cv2.rectangle(self.detection_boxed, (b[0], b[1]), (b[2], b[3]), 250, 1)
 
         orig_boxes = []
         for b in boxes:

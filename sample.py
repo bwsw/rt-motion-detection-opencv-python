@@ -53,8 +53,9 @@ if __name__ == "__main__":
             cv2.rectangle(frame, (b[0], b[1]), (b[2], b[3]), (0, 0, 255), 1)
 
         end = time()
-        res.append(1000 * (end - begin))
-        print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Boxes found: ", len(boxes))
+        it = (end - begin) * 1000
+        res.append(it)
+        print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Last: %.4f" % it, "Boxes found: ", len(boxes))
 
         idx = 0
         for r in results:
@@ -62,7 +63,7 @@ if __name__ == "__main__":
             cv2.imshow('packed_frame_%d' % idx, r)
 
         cv2.imshow('last_frame', frame)
-        cv2.imshow('detect_frame', detector.detection)
+        cv2.imshow('detect_frame', detector.detection_boxed)
         # cv2.imshow('diff_frame', detector.color_movement)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
