@@ -108,42 +108,20 @@ def numba_scan_box(expansion_step: int, height: int, width: int, avoid_points: n
     r_max = 0
     nl = [(r, c, -1, -1)]
     while len(nl) > 0:
-        (r, c, last_r, last_c) = nl.pop()
+        r, c, last_r, last_c = nl.pop()
 
-        if c_min > c:
-            c_min = c
+        c_min = min(c_min, c)
+        r_min = min(r_min, r)
+        c_max = max(c_max, c)
+        r_max = max(r_max, r)
 
-        if r_min > r:
-            r_min = r
+        nl = nl + numba_get_neighbors(expansion_step, r, c, last_r, last_c, height, width, avoid_points)
 
-        if c_max < c:
-            c_max = c
+    c_min = max(0, int(c_min - expansion_step))
+    r_min = max(0, int(r_min - expansion_step))
 
-        if r_max < r:
-            r_max = r
-
-        nl = nl + numba_get_neighbors(expansion_step, r, c, last_r, last_c,
-                                      height, width, avoid_points)
-
-    if c_min - expansion_step < 0:
-        c_min = 0
-    else:
-        c_min = int(c_min - expansion_step)
-
-    if r_min - expansion_step < 0:
-        r_min = 0
-    else:
-        r_min = int(r_min - expansion_step)
-
-    if c_max + expansion_step >= width:
-        c_max = width - 1
-    else:
-        c_max = int(c_max + expansion_step)
-
-    if r_max + expansion_step >= height:
-        r_max = height - 1
-    else:
-        r_max = int(r_max + expansion_step)
+    c_max = min(width - 1, int(c_max + expansion_step))
+    r_max = min(height - 1, int(r_max + expansion_step))
 
     return [c_min, r_min, c_max, r_max]
 
@@ -226,7 +204,6 @@ class MotionDetector:
                 self.background_acc = self.background_acc - subs_frame
 
             self.bg_frames.append(current_frame)
-
 
     def __detect_movement(self, frame_fp32):
         self.movement_frames.append(frame_fp32)
