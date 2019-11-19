@@ -50,7 +50,6 @@ def numba_combinations(rectangles):
     return res
 
 
-@jit(nopython=True)
 def find_bounding_boxes(rectangles):
     if rectangles is None or not len(rectangles):
         return []
