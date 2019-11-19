@@ -3,7 +3,7 @@ import numpy as np
 
 from numba import jit
 from collections import deque
-
+from time import sleep
 
 MAX_DIMENSION = 100000000
 
@@ -15,6 +15,7 @@ def gen_movement_frame(frames: list, shape):
         i += 1
         acc += f * i
     acc = acc / ((1 + i) / 2 * i)
+    acc[acc > 254] = 255
     return acc
 
 
@@ -178,7 +179,6 @@ class MotionDetector:
     def __init__(self,
                  bg_subs_scale_percent=0.25,
                  bg_history=15,
-                 bg_history_collection_period_max=1,
                  movement_frames_history=5,  # what amount of frames to use for
                  # current movement (to decrease the noise)
                  brightness_discard_level=20,  # if the pixel brightness is lower than
@@ -190,7 +190,6 @@ class MotionDetector:
         self.bg_history = bg_history
         self.group_boxes = group_boxes
         self.expansion_step = expansion_step
-        self.bg_history_collection_period_max = bg_history_collection_period_max
         self.movement_fps_history = movement_frames_history
         self.brightness_discard_level = brightness_discard_level
         self.pixel_compression_ratio = pixel_compression_ratio
@@ -198,7 +197,7 @@ class MotionDetector:
         self.bg_frames = deque(maxlen=bg_history)
         self.movement_frames = deque(maxlen=movement_frames_history)
         self.count = 0
-        self.bg_skip = 1
+        self.background_acc = None
         self.background_frame = None
         self.boxes = None
         self.movement = None
@@ -217,25 +216,27 @@ class MotionDetector:
         else:
             current_frame = frame_fp32
 
-        if self.background_frame is None:
-            self.background_frame = frame_fp32
+        if self.background_acc is None:
+            self.background_acc = frame_fp32
         else:
-            if self.count % self.bg_skip == 0:
-                self.background_frame = self.background_frame + current_frame
+            self.background_acc = self.background_acc + current_frame
 
-                if self.bg_frames.maxlen == len(self.bg_frames):
-                    subs_frame = self.bg_frames[0]
-                    self.background_frame = self.background_frame - subs_frame
+            if self.bg_frames.maxlen == len(self.bg_frames):
+                subs_frame = self.bg_frames[0]
+                self.background_acc = self.background_acc - subs_frame
 
-                self.bg_frames.append(current_frame)
+            self.bg_frames.append(current_frame)
 
-                if self.bg_skip < self.bg_history_collection_period_max:
-                    self.bg_skip += 1
 
     def __detect_movement(self, frame_fp32):
         self.movement_frames.append(frame_fp32)
         movement_frame = gen_movement_frame(list(self.movement_frames), frame_fp32.shape)
-        movement = cv2.absdiff(movement_frame, self.background_frame / len(self.bg_frames))
+        self.background_frame = self.background_acc / len(self.bg_frames)
+        self.background_frame[self.background_frame > 254] = 255
+        if len(self.bg_frames):
+            movement = cv2.absdiff(movement_frame, self.background_frame)
+        else:
+            movement = np.zeros(movement_frame.shape)
         self.color_movement = movement
         movement[movement < self.brightness_discard_level] = 0
         movement[movement > 0] = 254
@@ -259,7 +260,6 @@ class MotionDetector:
         boxes = self.__get_movement_zones(self.detection)
 
         self.count += 1
-
         return boxes
 
     def __get_movement_zones(self, f):
