@@ -1,5 +1,7 @@
 # Noise-Tolerant High Performance Motion Detector
 
+The motion detector presented here is developed to be noise-tolerant &ndash; webcam noise or different kinds of tremblings can be successfuly handled.
+
 You can download the video clip which is used in the demo at: https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl
 
 Place it in the `tmp` directory.
