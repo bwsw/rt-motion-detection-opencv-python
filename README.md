@@ -100,11 +100,3 @@ So, for the sample [video](https://box.bw-sw.com/f/c629c692d5c04b7caac6/?dl) (14
 * Standard deviation is `8.9909 ms`
 
 on `Intel(R) Core(TM) i5-7440HQ CPU @ 2.80GHz` CPU.
-
-## Author
-
-The code is developed by [Ivan Kudriavtsev](https://www.facebook.com/ivan.kudryavtsev.35).
-
-Find me on FB: https://www.facebook.com/ivan.kudryavtsev.35
-
-![Bitworks Software](https://github.com/bwsw/cloudstack-ui/blob/master/screens/15047882.png)
