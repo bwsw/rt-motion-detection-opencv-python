@@ -26,6 +26,6 @@ def copy_images(frame, rectangles, height, width):
             results.append(np.zeros((height, width, 3), dtype=frame.dtype))
         img = frame[rid[1]:rid[3], rid[0]:rid[2]]
         results[b][x:x + w, y:y + h] = img
-        box_map.append((b, (x, y, x + w, y + h), (rid[1], rid[0], rid[3], rid[2])))
+        box_map.append((b, (x, y, x + w, y + h), (rid[0], rid[1], rid[2], rid[3])))
 
     return results, box_map
