@@ -17,7 +17,7 @@ Algorithm demonstration video screencast can be found at: https://youtu.be/FCme1
 * `brightness_discard_level` &ndash; threshold which is used to detect movement from the noise (default: **20**);
 * `pixel_compression_ratio` &ndash; how much to compress the initial video for boxes search (default: **0.1**), means that every **10x10 px** of initial frame will be resized to **1x1 px** of detection frame;
 * `group_boxes` &ndash; group overlapping boxes into a single one or just keep them as they are (default: **True**);
-* `expansion_step` &ndash; how big is expansion algoritm step when it searches for boxes, lower steps lead to smaller performance and close objects are detected as separate, bigger step leads to faster algorithm performance and close objects can be detected as a single one (default: **1**).
+* `expansion_step` &ndash; how big is expansion algorithm step when it searches for boxes, lower steps lead to smaller performance and close objects are detected as separate, bigger step leads to faster algorithm performance and close objects can be detected as a single one (default: **1**).
 
 ```python
 import cv2
