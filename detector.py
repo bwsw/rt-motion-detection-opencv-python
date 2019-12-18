@@ -80,17 +80,14 @@ def numba_inaccessible_point(r: int, c: int, height: int, width: int, avoid_pts:
 
 
 @jit(nopython=True)
-def numba_get_neighbors(expansion_step: int, r: int, c: int, last_r: int, last_c: int, height: int, width: int,
-                        avoid_points: np.ndarray):
+def numba_get_neighbors(expansion_step: int, r: int, c: int, height: int, width: int, avoid_points: np.ndarray):
     nl = []
     for i in range(-expansion_step, expansion_step + 1):
         for j in range(-expansion_step, expansion_step + 1):
-            if not ((last_r + expansion_step >= r + i >= last_r - expansion_step) and (
-                    last_c + expansion_step >= c + j >= last_c - expansion_step)) and \
-                    not numba_inaccessible_point(r + i, c + j, height, width, avoid_points):
+            if not numba_inaccessible_point(r + i, c + j, height, width, avoid_points):
                 avoid_points[r + i, c + j] = 1
                 if abs(i) == expansion_step or abs(j) == expansion_step:
-                    nl.append((r + i, c + j, r, c))
+                    nl.append((r + i, c + j))
 
     return nl
 
@@ -106,16 +103,16 @@ def numba_scan_box(expansion_step: int, height: int, width: int, avoid_points: n
     r_min = MAX_DIMENSION
     c_max = 0
     r_max = 0
-    nl = [(r, c, -1, -1)]
+    nl = [(r, c)]
     while len(nl) > 0:
-        r, c, last_r, last_c = nl.pop()
+        r, c = nl.pop()
 
         c_min = min(c_min, c)
         r_min = min(r_min, r)
         c_max = max(c_max, c)
         r_max = max(r_max, r)
 
-        nl = nl + numba_get_neighbors(expansion_step, r, c, last_r, last_c, height, width, avoid_points)
+        nl = nl + numba_get_neighbors(expansion_step, r, c, height, width, avoid_points)
 
     c_min = max(0, int(c_min - expansion_step))
     r_min = max(0, int(r_min - expansion_step))
