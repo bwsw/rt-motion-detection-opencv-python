@@ -10,11 +10,16 @@ NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
 SRC_DIR			= src
 
-SRCS			= $(SRC_DIR)/scanner_opti.c
+SRCS			= $(SRC_DIR)/scanner_opti.c \
+			$(SRC_DIR)/coord_list.c
 
 OBJS			= $(SRCS:.c=.o)
 
-CFLAGS			= -W -Wall -Werror -Wextra -fPIC
+CFLAGS			= -W -Wall -Werror -Wextra -fPIC \
+			`pkg-config --cflags python` \
+			-I$(SRC_DIR)
+
+LIBS			= `pkg-config --libs python`
 
 all:            	$(NAME)
 
