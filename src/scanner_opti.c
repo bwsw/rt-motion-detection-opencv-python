@@ -1,5 +1,8 @@
 # define PY_SSIZE_T_CLEAN
 # include <Python.h>
+# define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+# define NO_IMPORT_ARRAY
+# include "numpy/arrayobject.h"
 # include "coord_list.h"
 # include <string.h>
 
@@ -18,8 +21,8 @@ PyObject *c_scan(PyObject *image, int expansion_step)
   */
 
   PyObject *boxes = PyList_New(0);
-  int height = PyInt_AsLong(PyTuple_GetItem(PyObject_GetAttrString(image, "shape"), 0));
-  int width = PyInt_AsLong(PyTuple_GetItem(PyObject_GetAttrString(image, "shape"), 1));
+  int height = PyArray_DIM((PyArrayObject *)image, 0);
+  int width = PyArray_DIM((PyArrayObject *)image, 1);
   t_c_list *scan_points = NULL;
   char **avoid_points = malloc(height * sizeof(char*));
   if (!avoid_points)
@@ -27,15 +30,14 @@ PyObject *c_scan(PyObject *image, int expansion_step)
 
   // this double loop init both avoid_points and scan_points
   for (int r = 0 ; r < height ; ++r) {
-    PyObject *row = PyList_GetItem(image, r);
     avoid_points[r] = malloc(width * sizeof(char));
     if (!avoid_points[r])
       return PyErr_NoMemory();
     memset(avoid_points[r], 1, width * sizeof(char));
 
     for (int c = 0 ; c < width ; ++c) {
-      if (0 < PyInt_AsLong(PyList_GetItem(row, c))) {
-	if (add_coord(&scan_points, r, c))
+      if (0 < *((unsigned char *)PyArray_GETPTR2((PyArrayObject *)image, r, c))) {
+    	if (add_coord(&scan_points, r, c))
 	  return PyErr_NoMemory();
 	avoid_points[r][c] = 0;
       }
@@ -57,10 +59,10 @@ PyObject *c_scan(PyObject *image, int expansion_step)
       ** transcription of numba_scan_box()
       */
 
-      int r_min = 0;
-      int c_min = 0;
-      int r_max = height;
-      int c_max = width;
+      int r_min = height;
+      int c_min = width;
+      int r_max = 0;
+      int c_max = 0;
       t_c_list *nl = NULL;
       if (add_coord(&nl, coord->r, coord->c))
 	return PyErr_NoMemory();
@@ -95,13 +97,13 @@ PyObject *c_scan(PyObject *image, int expansion_step)
 	free(nl_coord);
       }
 
-      r_min = MIN(0, r_min - expansion_step);
-      c_min = MIN(0, c_min - expansion_step);
+      r_min = MAX(0, r_min - expansion_step);
+      c_min = MAX(0, c_min - expansion_step);
 
-      r_max = MAX(height - 1, r_max + expansion_step);
-      c_max = MAX(width - 1, c_max + expansion_step);
+      r_max = MIN(height - 1, r_max + expansion_step);
+      c_max = MIN(width - 1, c_max + expansion_step);
 
-      PyList_Append(boxes, PyTuple_Pack(4, PyInt_FromLong(c_min), PyInt_FromLong(r_min), PyInt_FromLong(c_max), PyInt_FromLong(r_max)));
+      PyList_Append(boxes, Py_BuildValue("(iiii)", c_min, r_min, c_max, r_max));
 
       /*
       ** end of transcription of numba_scan_box()

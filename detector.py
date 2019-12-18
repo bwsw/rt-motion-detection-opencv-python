@@ -4,6 +4,7 @@ import numpy as np
 from numba import jit
 from collections import deque
 from time import sleep
+from opti_module.c_funcs import scan
 
 MAX_DIMENSION = 100000000
 
@@ -242,7 +243,7 @@ class MotionDetector:
 
         # wait until the bg gets established to decrease the level of initial unstable noise
         if len(self.bg_frames) >= self.bg_history / 2:
-            boxes = Scanner(f, self.expansion_step).scan()
+            boxes = scan(f, self.expansion_step)
             if self.group_boxes:
                 boxes = find_bounding_boxes(set(boxes))
 

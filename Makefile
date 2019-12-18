@@ -17,7 +17,8 @@ OBJS			= $(SRCS:.c=.o)
 
 CFLAGS			= -W -Wall -Werror -Wextra -fPIC \
 			`pkg-config --cflags python` \
-			-I$(SRC_DIR)
+			-I$(SRC_DIR) \
+			-I`python -m site --user-site`/numpy/core/include
 
 LIBS			= `pkg-config --libs python`
 
