@@ -8,6 +8,19 @@ Place it in the `tmp` directory.
 
 Algorithm demonstration video screencast can be found at: https://youtu.be/FCme11alEmc
 
+## Build the project
+
+Some parts of the project are in C and need to be compiled.
+
+First of all, you will need some tools to compile : gcc, make and pkg-config.
+_For example, in debian-based distribution_ : `sudo apt install gcc make pkg-config`
+
+To build, you can use **setup.py**, or directly **make** :
+* `make` / `./setup.py build` -> build the C dependencies
+* `make clean` / `./setup.py clean` -> remove temporary files
+* `make fclean` / `./setup.py fclean` -> remove temporary and built files
+* `make re` / `./setup.py rebuild` -> perform both `fclean` and `build`
+
 ## Detector usage and parameters
 
 * `bg_subs_scale_percent` &ndash; how much to scale initial frame before movement detection occurs (default: **1/4**);

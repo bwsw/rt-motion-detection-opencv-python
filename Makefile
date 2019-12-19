@@ -4,7 +4,7 @@ ECHO			= /bin/echo -e
 
 CC			= gcc
 
-BIN_DIR			= ./opti_module/bin
+BIN_DIR			= ./bouding_boxes/bin
 
 NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
@@ -15,7 +15,7 @@ SRCS			= $(SRC_DIR)/scanner_opti.c \
 
 OBJS			= $(SRCS:.c=.o)
 
-CFLAGS			= -W -Wall -Werror -Wextra -fPIC \
+CFLAGS			= -W -Wall -Werror -Wextra -fPIC -O3 \
 			`pkg-config --cflags python` \
 			-I$(SRC_DIR) \
 			-I`python -m site --user-site`/numpy/core/include
@@ -25,27 +25,18 @@ LIBS			= `pkg-config --libs python`
 all:            	$(NAME)
 
 $(NAME):		$(OBJS)
-			@$(ECHO) "\e[0m"
 			@mkdir -p $(BIN_DIR)
-			@$(CC) $(OBJS) -o $(NAME) -shared $(LIBS) 2> /dev/null && \
-			$(ECHO) "\e[32mAll done ! ==>\e[33m" $(NAME) "\e[32mcreated !\e[0m" || \
-			$(ECHO) "\e[91;5m[ERROR]\e[25m Can't compile\e[33m" $(NAME) "\e[0m"
+			$(CC) $(OBJS) -o $(NAME) -shared $(LIBS)
 
 clean:
-			@$(ECHO)n "\e[0mCleaning .o files..."
-			@$(RM) $(OBJS)
-			@$(ECHO) "	[\e[32mOk !\e[0m]"
+			$(RM) $(OBJS)
 
 fclean:         	clean
-			@$(ECHO)n "\e[39mCleaning executable..."
-			@$(RM) -r $(BIN_DIR)
-			@$(ECHO) "	[\e[32mOk !\e[0m]"
+			$(RM) -r $(BIN_DIR)
 
 re:             	fclean all
 
 .c.o:			%.c
-			@$(CC) -c $< -o $@ $(CFLAGS) && \
-			$(ECHO) "\e[32m[OK]" $< "\e[93m"|| \
-			$(ECHO) "\e[91;5m[ERR]\e[25m" $< "\e[93m"
+			$(CC) -c $< -o $@ $(CFLAGS)
 
 .PHONY:         	all clean fclean re
