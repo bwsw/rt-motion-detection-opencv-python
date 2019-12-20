@@ -4,7 +4,7 @@ import numpy as np
 from numba import jit
 from collections import deque
 from time import sleep
-from bouding_boxes import scan
+from bounding_boxes import scan
 
 MAX_DIMENSION = 100000000
 

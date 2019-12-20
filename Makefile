@@ -4,7 +4,7 @@ ECHO			= /bin/echo -e
 
 CC			= gcc
 
-BIN_DIR			= ./bouding_boxes/bin
+BIN_DIR			= ./bounding_boxes/bin
 
 NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
