@@ -11,7 +11,9 @@ NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 SRC_DIR			= src
 
 SRCS			= $(SRC_DIR)/scanner_opti.c \
-			$(SRC_DIR)/coord_list.c
+			$(SRC_DIR)/coord_list.c \
+			$(SRC_DIR)/packer_opti.c \
+			$(SRC_DIR)/packer_data_structs.c
 
 OBJS			= $(SRCS:.c=.o)
 
