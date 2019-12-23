@@ -4,7 +4,7 @@ import numpy as np
 from numba import jit
 from collections import deque
 from time import sleep
-from bounding_boxes import scan
+from bounding_boxes import scan, optimize_bounding_boxes
 
 MAX_DIMENSION = 100000000
 
@@ -245,7 +245,7 @@ class MotionDetector:
         if len(self.bg_frames) >= self.bg_history / 2:
             boxes = scan(f, self.expansion_step)
             if self.group_boxes:
-                boxes = find_bounding_boxes(set(boxes))
+                boxes = optimize_bounding_boxes(boxes)
 
         self.detection_boxed = self.detection.copy()
         for b in boxes:
