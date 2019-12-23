@@ -90,7 +90,7 @@ PyObject *c_pack(PyObject *py_rects, PyObject *bins)
   }
 
   // to simplify the loop, we add a fake head to the linked list
-  if (rect_ordered_add(&c_rects, 0, 0, NULL))
+  if (rect_ordered_add(&c_rects, 10000, 10000, NULL))
     return PyErr_NoMemory();
   int overall_bin_index = 0;
   for (int i = 0 ; i < nb_bins ; ++i) {
@@ -107,7 +107,7 @@ PyObject *c_pack(PyObject *py_rects, PyObject *bins)
 	int x, y;
 	int ret;
 	if ((ret = is_fitting(rect, &free_space, &x, &y)) == 1) {
-	  PyList_Append(rect_list, Py_BuildValue("(iiiiio)", overall_bin_index, x, y, rect->width, rect->height, rect->rid));
+	  PyList_Append(rect_list, Py_BuildValue("(iiiiiO)", overall_bin_index, x, y, rect->width, rect->height, rect->rid));
 	  parent->next = rect->next;
 	  free(rect);
 	  rect = parent;
