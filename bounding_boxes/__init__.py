@@ -10,6 +10,7 @@ try:
     lib = PyDLL(path)
     lib.c_scan.restype = py_object
     lib.c_scan.argtypes = [py_object, c_int]
+    lib.c_find_bounding_boxes.argtypes = [py_object]
 except OSError:
     print("Error when loading lib")
     exit(1)
@@ -17,3 +18,8 @@ except OSError:
 
 def scan(img: np.ndarray, expansion_step: int):
     return lib.c_scan(img, expansion_step)
+
+def find_bounding_boxes(rectangles):
+    if rectangles is None or not len(rectangles):
+        return []
+    return lib.c_find_bounding_boxes(rectangles)

@@ -10,8 +10,10 @@ NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
 SRC_DIR			= src
 
-SRCS			= $(SRC_DIR)/scanner_opti.c \
-			$(SRC_DIR)/coord_list.c
+SRCS			= $(SRC_DIR)/scanner.c \
+			$(SRC_DIR)/coord_list.c \
+			$(SRC_DIR)/find_bounding_boxes.c \
+			$(SRC_DIR)/bounding_box_data_struct.c
 
 OBJS			= $(SRCS:.c=.o)
 
