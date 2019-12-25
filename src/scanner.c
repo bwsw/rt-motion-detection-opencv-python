@@ -5,11 +5,7 @@
 # include "numpy/arrayobject.h"
 # include "coord_list.h"
 # include <string.h>
-
-# define MAX(x, y) (x > y ? (x) : (y))
-# define MIN(x, y) (x < y ? (x) : (y))
-
-# define ABS(x) (x < 0 ? (-(x)) : (x))
+# include "maths_macros.h"
 
 PyObject *c_scan(PyObject *image, int expansion_step)
 {

@@ -12,6 +12,8 @@ SRC_DIR			= src
 
 SRCS			= $(SRC_DIR)/scanner.c \
 			$(SRC_DIR)/coord_list.c \
+			$(SRC_DIR)/find_bounding_boxes.c \
+			$(SRC_DIR)/bounding_box_data_struct.c
 			$(SRC_DIR)/packer.c \
 			$(SRC_DIR)/packer_data_structs.c
 
