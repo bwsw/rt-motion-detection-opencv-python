@@ -1,19 +1,17 @@
 import numpy as np
-from rectpack import newPacker
+from bounding_boxes import pack
 
 
 def pack_images(frame, boxes, width, height, box_filter=lambda x: True):
-    packer = newPacker(rotation=False)
+    list_rects = list()
+    list_bins = list()
 
     for b in boxes:
         if box_filter(b):
-            packer.add_rect(height=b[2] - b[0], width=b[3] - b[1], rid=b)
+            list_rects.append((b[2] - b[0], b[3] - b[1], b,))
+    list_bins.append((width, height, int((frame.shape[0] + height) / height + 1) * int((frame.shape[1] + width) / width + 1),))
 
-    for i in range(0, int((frame.shape[0] + height) / height + 1) * int((frame.shape[1] + width) / width + 1)):
-        packer.add_bin(height=width, width=height)
-
-    packer.pack()
-    rectangles = packer.rect_list()
+    rectangles = pack(rects=list_rects, bins=list_bins)
     return copy_images(frame, rectangles, height, width)
 
 

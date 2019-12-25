@@ -4,14 +4,16 @@ ECHO			= /bin/echo -e
 
 CC			= gcc
 
-BIN_DIR			= ./bouding_boxes/bin
+BIN_DIR			= ./bounding_boxes/bin
 
 NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
 SRC_DIR			= src
 
-SRCS			= $(SRC_DIR)/scanner_opti.c \
-			$(SRC_DIR)/coord_list.c
+SRCS			= $(SRC_DIR)/scanner.c \
+			$(SRC_DIR)/coord_list.c \
+			$(SRC_DIR)/packer.c \
+			$(SRC_DIR)/packer_data_structs.c
 
 OBJS			= $(SRCS:.c=.o)
 
