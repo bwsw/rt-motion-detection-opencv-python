@@ -14,7 +14,7 @@ def filter_fun(b):
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture('tmp/helmets-v1-55.mp4')
+    cap = cv2.VideoCapture('tmp/sample-Elysium.2013.2160p.mkv')
 
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
