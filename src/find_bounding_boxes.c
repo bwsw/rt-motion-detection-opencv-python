@@ -30,7 +30,7 @@ PyObject *c_find_bounding_boxes(PyObject *py_rectangles)
 
     t_box *parent_test_rect = test_stack;
     for (t_box *test_rect = test_stack->next ; test_rect ;
-	 parent_test_rect = test_rect,test_rect = test_rect->next) {
+	 parent_test_rect = test_rect, test_rect = test_rect->next) {
 
       t_box *parent_rect = rectangles;
       for (t_box *rect = rectangles->next ; rect ; parent_rect = rect, rect = rect->next) {
@@ -62,11 +62,9 @@ PyObject *c_find_bounding_boxes(PyObject *py_rectangles)
 	  free(test_rect);
 	  rect = parent_rect;
 	  test_rect = parent_test_rect;
-	  if (test_rect == test_stack) {
+	  if (test_rect == test_stack)
 	    test_rect = test_rect->next;
-	    if (!test_rect)
-	      break;
-	  }
+	  break;
 	}
       }
       if (!test_rect)
