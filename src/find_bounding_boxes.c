@@ -30,51 +30,43 @@ PyObject *c_find_bounding_boxes(PyObject *py_rectangles)
     t_box *new_stack = NULL;
 
     t_box *parent_test_rect = test_stack;
-
-    for (t_box *test_rect = test_stack->next ; test_rect ; parent_test_rect = test_rect,test_rect = test_rect->next) {
+    for (t_box *test_rect = test_stack->next ; test_rect ;
+	 parent_test_rect = test_rect, test_rect = test_rect->next) {
 
       t_box *parent_rect = rectangles;
       for (t_box *rect = rectangles->next ; rect ; parent_rect = rect, rect = rect->next) {
+	if (rect == test_rect)
+	  continue;
+	if (MAX(rect->min_x, test_rect->min_x) < MIN(rect->max_x, test_rect->max_x) &&
+	    MAX(rect->min_y, test_rect->min_y) < MIN(rect->max_y, test_rect->max_y)) {
+	  if (add_box(&new_stack, MIN(rect->min_x, test_rect->min_x),
+		      MIN(rect->min_y, test_rect->min_y),
+		      MAX(rect->max_x, test_rect->max_x),
+		      MAX(rect->max_y, test_rect->max_y)))
+	    return PyErr_NoMemory();
 
-        if (rect == test_rect)
-          continue;
-
-        if (MAX(rect->min_x, test_rect->min_x) < MIN(rect->max_x, test_rect->max_x) &&
-            MAX(rect->min_y, test_rect->min_y) < MIN(rect->max_y, test_rect->max_y)) {
-
-          if (add_box(&new_stack, MIN(rect->min_x, test_rect->min_x),
-                                      MIN(rect->min_y, test_rect->min_y),
-                                      MAX(rect->max_x, test_rect->max_x),
-                                      MAX(rect->max_y, test_rect->max_y)))
-            return PyErr_NoMemory();
-
-          // those tests allow to avoid problems due to linked-list overlap
-          if (parent_rect == test_rect) {
-            parent_rect = parent_test_rect;
-            parent_rect->next = rect->next;
-          } else if (parent_test_rect == rect) {
-            parent_test_rect = parent_rect;
-            parent_test_rect->next = test_rect->next;
-          } else {
-            parent_rect->next = rect->next;
-            parent_test_rect->next = test_rect->next;
-          }
-          if (rect == test_stack) {
-            test_stack = parent_rect;
-          }
-
-          free(rect);
-          free(test_rect);
-
-          rect = parent_rect;
-          test_rect = parent_test_rect;
-
-          if (test_rect == test_stack) {
-            test_rect = test_rect->next;
-            if (!test_rect)
-              break;
-          }
-        }
+	  // those tests allow to avoid problems due to linked-list overlap
+	  if (parent_rect == test_rect) {
+	    parent_rect = parent_test_rect;
+	    parent_rect->next = rect->next;
+	  } else if (parent_test_rect == rect) {
+	    parent_test_rect = parent_rect;
+	    parent_test_rect->next = test_rect->next;
+	  } else {
+	    parent_rect->next = rect->next;
+	    parent_test_rect->next = test_rect->next;
+	  }
+	  if (rect == test_stack) {
+	    test_stack = parent_rect;
+	  }
+	  free(rect);
+	  free(test_rect);
+	  rect = parent_rect;
+	  test_rect = parent_test_rect;
+	  if (test_rect == test_stack)
+	    test_rect = test_rect->next;
+	  break;
+	}
       }
 
       if (!test_rect)
