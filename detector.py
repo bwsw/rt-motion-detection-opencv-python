@@ -202,7 +202,7 @@ class MotionDetector:
                 subs_frame = self.bg_frames[0]
                 self.background_acc = self.background_acc - subs_frame
 
-            self.bg_frames.append(current_frame)
+        self.bg_frames.append(current_frame)
 
     def __detect_movement(self, frame_fp32):
         self.movement_frames.append(frame_fp32)

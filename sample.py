@@ -14,12 +14,13 @@ def filter_fun(b):
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture('tmp/sample-Elysium.2013.2160p.mkv')
-
-    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
     detector = MotionDetector(bg_history=20,
+                              brightness_discard_level=25,
+                              bg_subs_scale_percent=0.1,
                               group_boxes=True,
                               expansion_step=5)
 
@@ -41,10 +42,10 @@ if __name__ == "__main__":
         ## this code cuts motion areas from initial image and
         ## fills "bins" of 512x512 with such motion areas.
         ##
-        results = []
-        if boxes:
-            results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height,
-                                           box_filter=filter_fun)
+        # results = []
+        # if boxes:
+        #     results, box_map = pack_images(frame=frame, boxes=boxes, width=b_width, height=b_height,
+        #                                    box_filter=filter_fun)
             # box_map holds list of mapping between image placement in packed bins and original boxes
 
         ## end
@@ -58,13 +59,13 @@ if __name__ == "__main__":
         print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Last: %.4f" % it, "Boxes found: ", len(boxes))
 
         idx = 0
-        for r in results:
-            idx += 1
-            cv2.imshow('packed_frame_%d' % idx, r)
+        # for r in results:
+        #     idx += 1
+        #     cv2.imshow('packed_frame_%d' % idx, r)
 
         cv2.imshow('last_frame', frame)
         cv2.imshow('detect_frame', detector.detection_boxed)
-        # cv2.imshow('diff_frame', detector.color_movement)
+        cv2.imshow('diff_frame', detector.color_movement)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
