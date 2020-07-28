@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import sys
-
 import subprocess
-from setuptools import setup
+import sys
 from distutils.command.build import build
 from distutils.command.clean import clean
+
+from setuptools import setup
 
 
 class Build(build):

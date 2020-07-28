@@ -1,8 +1,9 @@
+from collections import deque
+
 import cv2
 import numpy as np
-
 from numba import jit
-from collections import deque
+
 from bounding_boxes import scan, optimize_bounding_boxes
 
 MAX_DIMENSION = 100000000
@@ -45,6 +46,7 @@ class MotionDetector:
 
         self.bg_frames = deque(maxlen=bg_history)
         self.movement_frames = deque(maxlen=movement_frames_history)
+        self.orig_frames = deque(maxlen=movement_frames_history)
         self.count = 0
         self.background_acc = None
         self.background_frame = None
@@ -95,6 +97,8 @@ class MotionDetector:
         return movement
 
     def detect(self, f):
+        self.orig_frames.append(f)
+
         width = int(f.shape[1] * self.bg_subs_scale_percent)
         height = int(f.shape[0] * self.bg_subs_scale_percent)
 
@@ -109,7 +113,11 @@ class MotionDetector:
         boxes = self.__get_movement_zones(self.detection)
 
         self.count += 1
-        return boxes
+
+        if self.movement_frames.maxlen != len(self.movement_frames):
+            return [], f
+
+        return boxes, self.orig_frames[0]
 
     def __get_movement_zones(self, f):
         boxes = []

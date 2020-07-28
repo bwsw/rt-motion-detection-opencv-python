@@ -1,6 +1,7 @@
 from ctypes import PyDLL, py_object, c_int
-from sys import exit
 from os import path
+from sys import exit
+
 import numpy as np
 
 my_path = path.abspath(path.dirname(__file__))
