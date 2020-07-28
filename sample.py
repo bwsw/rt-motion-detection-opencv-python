@@ -14,13 +14,15 @@ def filter_fun(b):
 
 if __name__ == "__main__":
 
-    cap = cv2.VideoCapture('/home/ivan/video/output.mp4')
+    cap = cv2.VideoCapture('../video/output.mp4')
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-    detector = MotionDetector(bg_history=10,
+    detector = MotionDetector(bg_history=5,
+                              movement_frames_history=2,
                               brightness_discard_level=5,
-                              bg_subs_scale_percent=0.25,
+                              bg_subs_scale_percent=0.2,
+                              pixel_compression_ratio=0.1,
                               group_boxes=True,
                               expansion_step=5)
 
@@ -34,11 +36,11 @@ if __name__ == "__main__":
     ctr = 0
     while True:
         # Capture frame-by-frame
+        begin = time()
         ret, frame = cap.read()
         if frame is None:
             break
 
-        begin = time()
         boxes, frame = detector.detect(frame)
         # boxes hold all boxes around motion parts
 
@@ -58,13 +60,15 @@ if __name__ == "__main__":
 
         end = time()
         it = (end - begin) * 1000
-        res.append(it)
-        print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Last: %.4f" % it, "Boxes found: ", len(boxes))
 
-        idx = 0
-        for r in results:
-             idx += 1
-             cv2.imshow('packed_frame_%d' % idx, r)
+        res.append(it)
+        print("StdDev: %.4f" % np.std(res), "Mean: %.4f" % np.mean(res), "Last: %.4f" % it,
+              "Boxes found: ", len(boxes))
+
+        # idx = 0
+        # for r in results:
+        #      idx += 1
+        #      cv2.imshow('packed_frame_%d' % idx, r)
 
         ctr += 1
         nc = len(results)
@@ -73,11 +77,14 @@ if __name__ == "__main__":
         else:
             fc[nc] = 0
 
-        cv2.imshow('last_frame', frame)
-        #cv2.imshow('detect_frame', detector.detection_boxed)
-        #cv2.imshow('diff_frame', detector.color_movement)
+        if ctr % 100 == 0:
+            print("Total Frames: ", ctr, "Packed Frames:", fc)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # cv2.imshow('last_frame', frame)
+        # cv2.imshow('detect_frame', detector.detection_boxed)
+        # cv2.imshow('diff_frame', detector.color_movement)
+        #
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
 
     print(fc, ctr)
