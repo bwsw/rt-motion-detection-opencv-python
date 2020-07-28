@@ -28,6 +28,7 @@ def numba_scale_box(b: (int, int, int, int), scale: float):
 class MotionDetector:
     def __init__(self,
                  bg_subs_scale_percent=0.25,
+                 bg_skip_frames=50,
                  bg_history=15,
                  movement_frames_history=5,  # what amount of frames to use for
                  # current movement (to decrease the noise)
@@ -37,6 +38,7 @@ class MotionDetector:
                  group_boxes=True,
                  expansion_step=1):
         self.bg_subs_scale_percent = bg_subs_scale_percent
+        self.bg_skip_frames = bg_skip_frames
         self.bg_history = bg_history
         self.group_boxes = group_boxes
         self.expansion_step = expansion_step
@@ -63,6 +65,9 @@ class MotionDetector:
         return cv2.GaussianBlur(cv2.resize(f, (width, height), interpolation=cv2.INTER_CUBIC), (5, 5), 0)
 
     def __update_background(self, frame_fp32):
+        if not self.count % self.bg_skip_frames == 0:
+            return
+
         if self.movement_frames.maxlen == len(self.movement_frames):
             current_frame = self.movement_frames[0]
         else:
@@ -104,6 +109,7 @@ class MotionDetector:
 
         detect_width = int(f.shape[1] * self.pixel_compression_ratio)
         detect_height = int(f.shape[0] * self.pixel_compression_ratio)
+
         self.frame = self.__class__.prepare(f, width, height)
         nf_fp32 = self.frame.astype('float32')
         self.__update_background(nf_fp32)
@@ -114,7 +120,7 @@ class MotionDetector:
 
         self.count += 1
 
-        if self.movement_frames.maxlen != len(self.movement_frames):
+        if self.movement_frames.maxlen != len(self.movement_frames) or self.bg_frames.maxlen != len(self.bg_frames):
             return [], f
 
         return boxes, self.orig_frames[0]
