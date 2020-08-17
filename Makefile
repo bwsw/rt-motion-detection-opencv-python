@@ -22,9 +22,9 @@ OBJS			= $(SRCS:.c=.o)
 CFLAGS			= -W -Wall -Werror -Wextra -fPIC -O3 \
 			`pkg-config --cflags python` \
 			-I$(SRC_DIR) \
-			-I`python -m site --user-site`/numpy/core/include
+			-I`python3 -m site --user-site`/numpy/core/include
 
-LIBS			= `pkg-config --libs python`
+LIBS			= `pkg-config --libs python3`
 
 all:            	$(NAME)
 
