@@ -2,6 +2,12 @@
 # include <Python.h>
 # include "packer_data_structs.h"
 
+#if PY_MAJOR_VERSION >= 3
+  #define PyInt_FromLong               PyLong_FromLong
+  #define PyInt_AsLong                 PyLong_AsLong
+  #define PyInt_AS_LONG                PyLong_AS_LONG
+#endif
+
 static int is_fitting(t_rect *rect, t_free_space **free_space, int *x_rect, int *y_rect)
 {
   t_free_space *parent = NULL;

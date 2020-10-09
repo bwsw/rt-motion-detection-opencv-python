@@ -3,6 +3,12 @@
 # include "maths_macros.h"
 # include "bounding_box_data_struct.h"
 
+#if PY_MAJOR_VERSION >= 3
+  #define PyInt_FromLong               PyLong_FromLong
+  #define PyInt_AsLong                 PyLong_AsLong
+  #define PyInt_AS_LONG                PyLong_AS_LONG
+#endif
+
 PyObject *c_find_bounding_boxes(PyObject *py_rectangles)
 {
   t_box *rectangles = NULL;
