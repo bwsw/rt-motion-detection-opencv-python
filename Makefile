@@ -4,11 +4,11 @@ ECHO			= /bin/echo -e
 
 CC			= gcc
 
-BIN_DIR			= ./bounding_boxes/bin
+BIN_DIR			= ./motion_detector/bin
 
 NAME			= $(BIN_DIR)/libmotion_detector_optimization.so
 
-SRC_DIR			= src
+SRC_DIR			= ./motion_detector/src
 
 SRCS			= $(SRC_DIR)/scanner.c \
 			$(SRC_DIR)/coord_list.c \

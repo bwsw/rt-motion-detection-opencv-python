@@ -32,8 +32,10 @@ class Rebuild(FClean, Build):
             sys.exit(-1)
 
 setup(
-    name='motion detector optimization',
-    packages=['opti_module'],
+    name='motion_detector_python',
+    version='1.0',
+    packages=['motion_detector'],
+    package_data={'motion_detector': ['./bin/libmotion_detector_optimization.so']},
     cmdclass={
         'build': Build,
         'clean': Clean,
