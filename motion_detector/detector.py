@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from numba import jit
 
-from bounding_boxes import scan, optimize_bounding_boxes
+from .bounding_boxes import scan, optimize_bounding_boxes
 
 MAX_DIMENSION = 100000000
 
