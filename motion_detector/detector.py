@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from numba import jit
 
-from bounding_boxes import scan, optimize_bounding_boxes
+from .bounding_boxes import scan, optimize_bounding_boxes
 
 MAX_DIMENSION = 100000000
 
@@ -124,6 +124,20 @@ class MotionDetector:
             return [], f
 
         return boxes, self.orig_frames[0]
+
+    def detect_simple(self, f):
+        self.orig_frames.append(f)
+
+        width = int(f.shape[1] * self.bg_subs_scale_percent)
+        height = int(f.shape[0] * self.bg_subs_scale_percent)
+
+        self.frame = self.__class__.prepare(f, width, height)
+        nf_fp32 = self.frame.astype('float32')
+        self.__update_background(nf_fp32)
+
+        self.movement = self.__detect_movement(nf_fp32)
+
+        return self.movement
 
     def __get_movement_zones(self, f):
         boxes = []

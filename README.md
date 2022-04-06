@@ -21,6 +21,9 @@ To build, you can use **setup.py**, or directly **make** :
 * `make fclean` / `./setup.py fclean` -> remove temporary and built files
 * `make re` / `./setup.py rebuild` -> perform both `fclean` and `build`
 
+And install use **pip**:
+* `pip install .`
+
 ## Detector usage and parameters
 
 * `bg_subs_scale_percent` &ndash; how much to scale initial frame before movement detection occurs (default: **1/4**);

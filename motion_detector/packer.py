@@ -1,6 +1,6 @@
 import numpy as np
 
-from bounding_boxes import pack
+from .bounding_boxes import pack
 
 
 def pack_images(frame, boxes, width, height, box_filter=lambda x: True):
